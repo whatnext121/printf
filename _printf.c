@@ -7,44 +7,41 @@
  */
 int _printf(const char *format, ...)
 {
-	int add = 0;
-        int i;
-        va_list my_list;
-        va_start (my_list, format);
-        if(format == NULL)
-                return -1;
-        for(i = 0; format[i] != '\0'; i++)
-        {
-                if(format[i] != '%')
-                {
-                        write (1, format, 1);
-                        add++;
-                }
-                else
-                {
-                        i++;
-                }
-		if(format == '\0')
+	int i, printed = 0, count = 0;
+	int flags, width, precision, size, buff_in = 0;
+	va_list My_list;
+	char buffer[BUFF_SIZE];
+
+	if (format == NULL)
+		return (-1);
+
+	va_start(My_list, format);
+
+	for (i = 0; format && format[i] != '\0'; i++)
+	{
+		if (format[i] != '%')
 		{
-			break;
+			buffer[buff_in++] = format[i];
+			if (buff_in == BUFF_SIZE)
+				print_buffer(buffer, &buff_in);
+			count++;
 		}
-                else if(format[i] == 'c')
-                {
-                        char c = va_arg(my_list, char);
-                                putchar(c);
-                        add++;
-                }
-                else if(format[i] == 's')
-                {
-                        char *s = va_arg(my_list, char *);
-                                int length = 0;
-                        while(str[length] != '\0')
-                                length++;
-			write(1, str, length);
-			add += length;
+		else
+		{
+			print_buffer(buffer, &buff_ind);
+			flags = get_flags(format, &i);
+			width = get_width(format, &i, My_list);
+			precision = get_precision(format, &i, My_list);
+			size = get_size(format, &i);
+			++i;
+			printed = handle_print(format, &i, My_list, buffer,
+				flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			count += printed;
 		}
-		format++;
+	print_buffer(buffer, &buff_in);
+	va_end(My_list);
+	return (count);
 	}
-	va_end (my_list);
-	return (add);
 }
