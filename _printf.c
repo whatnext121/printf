@@ -3,6 +3,9 @@
  * _printf - printf string
  * @format: inputed string
  * @..: variable number of argument
+ * print_buffer - Prints the contents of the buffer
+ * @buffer: Array of chars
+ * @buff_ind: The length of char.
  * Return: char variable
  */
 void print_buffer(char buffer[], int *buff_ind);
@@ -34,7 +37,7 @@ int _printf(const char *format, ...)
 			width = get_width(format, &i, My_list);
 			precision = get_precision(format, &i, My_list);
 			size = get_size(format, &i);
-			++i;
+			i++;
 			printed = handle_print(format, &i, My_list, buffer, flags, width, precision, size);
 			if (printed == -1)
 				return (-1);
@@ -45,11 +48,6 @@ int _printf(const char *format, ...)
 	return (count);
 	}
 }
-/**
- * print_buffer - Prints the contents of the buffer 
- * @buffer: Array of chars
- * @buff_ind: The length of char.
- */
 void print_buffer(char buffer[], int *buff_ind)
 {
 	if (*buff_ind > 0)
@@ -57,4 +55,3 @@ void print_buffer(char buffer[], int *buff_ind)
 
 	*buff_ind = 0;
 }
-
