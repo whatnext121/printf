@@ -1,15 +1,14 @@
 #include "main.h"
 /**
- * _printf - printf pro
+ * _printf - printf string
  * @format: inputed string
  * @..: variable number of argument
  * Return: char variable
  */
-int _printf(const char *format, ...);
+int _printf(const char *format, ...)
 {
-        int add = 0;
+	int add = 0;
         int i;
-
         va_list my_list;
         va_start (my_list, format);
         if(format == NULL)
@@ -18,13 +17,17 @@ int _printf(const char *format, ...);
         {
                 if(format[i] != '%')
                 {
-                        putchar(%);
+                        write (1, format, 1);
                         add++;
                 }
                 else
                 {
                         i++;
                 }
+		if(format == '\0')
+		{
+			break;
+		}
                 else if(format[i] == 'c')
                 {
                         char c = va_arg(my_list, char);
@@ -37,8 +40,11 @@ int _printf(const char *format, ...);
                                 int length = 0;
                         while(str[length] != '\0')
                                 length++;
+			write(1, str, length);
+			add += length;
 		}
+		format++;
 	}
-	add++;
-	va_end(my_list);
+	va_end (my_list);
+	return (add);
 }
