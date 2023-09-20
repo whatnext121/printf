@@ -5,10 +5,11 @@
  * @..: variable number of argument
  * Return: char variable
  */
+void print_buffer(char buffer[], int *buff_ind);
 int _printf(const char *format, ...)
 {
 	int i, printed = 0, count = 0;
-	int flags, width, precision, size, buff_in = 0;
+	int flags, width, precision, size, buff_ind = 0;
 	va_list My_list;
 	char buffer[BUFF_SIZE];
 
@@ -21,9 +22,9 @@ int _printf(const char *format, ...)
 	{
 		if (format[i] != '%')
 		{
-			buffer[buff_in++] = format[i];
-			if (buff_in == BUFF_SIZE)
-				print_buffer(buffer, &buff_in);
+			buffer[buff_ind++] = format[i];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
 			count++;
 		}
 		else
@@ -34,14 +35,26 @@ int _printf(const char *format, ...)
 			precision = get_precision(format, &i, My_list);
 			size = get_size(format, &i);
 			++i;
-			printed = handle_print(format, &i, My_list, buffer,
-				flags, width, precision, size);
+			printed = handle_print(format, &i, My_list, buffer, flags, width, precision, size);
 			if (printed == -1)
 				return (-1);
 			count += printed;
 		}
-	print_buffer(buffer, &buff_in);
+	print_buffer(buffer, &buff_ind);
 	va_end(My_list);
 	return (count);
 	}
 }
+/**
+ * print_buffer - Prints the contents of the buffer 
+ * @buffer: Array of chars
+ * @buff_ind: The length of char.
+ */
+void print_buffer(char buffer[], int *buff_ind)
+{
+	if (*buff_ind > 0)
+		write(1, &buffer[0], *buff_ind);
+
+	*buff_ind = 0;
+}
+
